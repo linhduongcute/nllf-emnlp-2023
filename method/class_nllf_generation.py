@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from huggingface_hub import hf_hub_url, cached_download
+from huggingface_hub import hf_hub_download
 from transformers import BertTokenizer, BertModel
 import torch
 import os
@@ -22,8 +22,10 @@ class NLLFGeneratorInAction:
         self.maxlen_s = maxlen_s
         self.maxlen_bsq = maxlen_bsq
         
-        config_file_url = hf_hub_url(f"{username}/{repo_name}", filename="cls_layer.torch")
-        value = cached_download(config_file_url)
+        value = hf_hub_download(
+            repo_id=f"{username}/{repo_name}",
+            filename="cls_layer.torch"
+        )
         self.cls_layer = torch.load(value)
         
         self.the_model = BertModel.from_pretrained(f"{username}/{repo_name}").cuda()
